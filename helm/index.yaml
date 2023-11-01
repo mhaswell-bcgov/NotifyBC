@@ -1,84 +1,15 @@
 apiVersion: v1
 entries:
-  mongodb:
-  - annotations:
-      category: Database
-    apiVersion: v2
-    appVersion: 4.4.4
-    created: "2023-11-01T16:00:13.361929-07:00"
-    dependencies:
-    - name: common
-      repository: https://charts.bitnami.com/bitnami
-      tags:
-      - bitnami-common
-      version: 1.x.x
-    description: NoSQL document-oriented database that stores JSON-like documents
-      with dynamic schemas, simplifying the integration of data in content-driven
-      applications.
-    digest: 16a2efcdf3c1bd9ca70e88c3cfb5240a860da4cc616d7996ace576013554f3fc
-    home: https://github.com/bitnami/charts/tree/master/bitnami/mongodb
-    icon: https://bitnami.com/assets/stacks/mongodb/img/mongodb-stack-220x234.png
-    keywords:
-    - mongodb
-    - database
-    - nosql
-    - cluster
-    - replicaset
-    - replication
-    maintainers:
-    - email: containers@bitnami.com
-      name: Bitnami
-    name: mongodb
-    sources:
-    - https://github.com/bitnami/bitnami-docker-mongodb
-    - https://mongodb.org
-    urls:
-    - https://mhaswell-bcgov.github.io/NotifyBC/helm/charts/mongodb-10.7.1.tgz
-    version: 10.7.1
   notify-bc:
   - apiVersion: v2
-    appVersion: "4.1"
-    created: "2023-11-01T16:00:13.386947-07:00"
+    appVersion: 4.1.9
+    created: "2023-11-01T16:16:01.851702-07:00"
     description: NotifyBC Helm chart for Kubernetes
-    digest: c935a4b441b882563e1772f8ee734729eee6a1b6eb48d4e7e75424288138fb79
+    digest: 4c805701081a6333880894e375064e9a05a9920e2d8219b965b77c9be9b15d9d
     icon: https://raw.githubusercontent.com/bcgov/NotifyBC/main/favicon.ico
     name: notify-bc
     type: application
     urls:
-    - https://mhaswell-bcgov.github.io/NotifyBC/helm/charts/notify-bc-1.1.1.tgz
-    version: 1.1.1
-  redis:
-  - annotations:
-      category: Database
-    apiVersion: v2
-    appVersion: 6.2.4
-    created: "2023-11-01T16:00:13.390581-07:00"
-    dependencies:
-    - name: common
-      repository: https://charts.bitnami.com/bitnami
-      tags:
-      - bitnami-common
-      version: 1.x.x
-    description: Open source, advanced key-value store. It is often referred to as
-      a data structure server since keys can contain strings, hashes, lists, sets
-      and sorted sets.
-    digest: 85da23b4fa8f436c127dcad2fd382466079fc4e265e59f5c26ea8eb517d13510
-    home: https://github.com/bitnami/charts/tree/master/bitnami/redis
-    icon: https://bitnami.com/assets/stacks/redis/img/redis-stack-220x234.png
-    keywords:
-    - redis
-    - keyvalue
-    - database
-    maintainers:
-    - email: containers@bitnami.com
-      name: Bitnami
-    - email: cedric@desaintmartin.fr
-      name: desaintmartin
-    name: redis
-    sources:
-    - https://github.com/bitnami/bitnami-docker-redis
-    - http://redis.io/
-    urls:
-    - https://mhaswell-bcgov.github.io/NotifyBC/helm/charts/redis-14.7.2.tgz
-    version: 14.7.2
-generated: "2023-11-01T16:00:13.358573-07:00"
+    - https://mhaswell-bcgov.github.io/NotifyBC/helm/charts/notify-bc-1.1.2.tgz
+    version: 1.1.2
+generated: "2023-11-01T16:16:01.846242-07:00"
