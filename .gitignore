@@ -69,3 +69,5 @@ typings/
 /server/certs/**
 !/server/certs/.keep
 notify-bc-lb/
+
+.DS_Store
