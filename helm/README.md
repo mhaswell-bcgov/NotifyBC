@@ -21,3 +21,17 @@ oc project 12345-tools
 # step 4 - Apply deployment file
 oc apply -f deployments/openshift/notify-build.yaml
 ```
+
+## Restoring from database backups
+If database backups are enabled (`notify-bc.cronJob.enabled: true`), backups will be created automatically on a schedule set in `notify-bc.cronJob.schedule`. Backups are saved as date-stamped .gz (gzip) files to a PersistentVolumeClaim `...notify-bc-cronjob-mongodb-backup`.
+To restore from a backup:
+1. Copy your OpenShift login command and paste into a terminal. Switch to the desired project (`oc project ...`).
+2. Find the `RELEASE_NAME` of the app you want to restore to. This should match the name of the PersistentVolumeClaim that contains the database backups, for example if your PVC is called `example-notifybc-dev-notify-bc-cronjob-mongodb-backup`, the `RELEASE_NAME` should be `example-notifybc-dev`.
+3. Determine the `BACKUP_DATE`, the date of the backup you want to restore from. For example if you want to restore from a backup created on January 25th, 2024, the `BACKUP_DATE` should be `20240125`.
+   - Depending on the backup schedule there may be multiple backups performed per day in which case the latest backup from the given `BACKUP_DATE` will be used.
+4. From the root of this project, run the following command:
+    ```bash
+    oc process -f helm/deployments/openshift/backup-restore.yaml -p RELEASE_NAME="example-notifybc-dev" -p BACKUP_DATE="20240125" | oc apply -f -
+    ```
+    (replacing the example values `example-notifybc-dev` and `20240125` with the values found earlier) to run the database restore job.
+5. A Job and a Pod will be created to perform the restore process which can be monitored in OpenShift. Both will be cleaned up automatically a few minutes after the process is complete.
