@@ -4,6 +4,7 @@ on:
   # push:
   #   branches:
   #     - development
+  pull_request:
   push:
     paths:
       - helm/Chart.yaml
