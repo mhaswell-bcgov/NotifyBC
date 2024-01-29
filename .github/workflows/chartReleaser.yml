@@ -6,6 +6,7 @@ on:
       - development
     paths:
       - helm/Chart.yaml
+  workflow_dispatch:
 
 jobs:
   release:
