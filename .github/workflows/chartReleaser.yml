@@ -22,6 +22,5 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           charts_dir: ./
-          charts_url: https://mhaswell-bcgov.github.io/NotifyBC/docs/helm/
           branch: gh-pages
           target_dir: docs/helm
