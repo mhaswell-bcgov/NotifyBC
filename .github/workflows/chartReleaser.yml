@@ -21,7 +21,6 @@ jobs:
         uses: stefanprodan/helm-gh-pages@master
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          charts_dir: docs/helm
-          charts_url: https://mhaswell-bcgov.github.io/NotifyBC/docs/helm/
+          charts_dir: ./
           branch: gh-pages
           target_dir: docs/helm
