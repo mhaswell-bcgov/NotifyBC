@@ -8,6 +8,7 @@ spec:
   podSelector:
     matchLabels:
       app.kubernetes.io/name: {{ include "NotifyBC.name" . }}-app
+      app.kubernetes.io/instance: {{ .Release.Name }}
   ingress:
     - ports:
         - protocol: TCP

@@ -8,6 +8,7 @@ spec:
   podSelector:
     matchLabels:
       app.kubernetes.io/name: redis
+      app.kubernetes.io/instance: {{ .Release.Name }}
   ingress:
     - ports:
         - protocol: TCP
