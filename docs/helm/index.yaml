@@ -3,7 +3,7 @@ entries:
   notify-bc:
   - apiVersion: v2
     appVersion: "4.1"
-    created: "2024-02-13T22:56:34.331892455Z"
+    created: "2024-02-14T16:34:41.342371679Z"
     dependencies:
     - name: mongodb
       repository: https://charts.bitnami.com/bitnami
@@ -13,7 +13,7 @@ entries:
       repository: https://charts.bitnami.com/bitnami
       version: 16.13.2
     description: NotifyBC Helm chart for Kubernetes
-    digest: db33b0ec169845cf56c8b08303cc9f4dcbf467e81db03ec775ea00fbcb86dcad
+    digest: b5ed40035d2dfb7d56e9430dd4763e9352d0e23b20f2cec2bc4ceb72a4a35f8c
     icon: https://raw.githubusercontent.com/bcgov/NotifyBC/main/favicon.ico
     name: notify-bc
     type: application
@@ -77,4 +77,4 @@ entries:
     urls:
     - https://mhaswell-bcgov.github.io/NotifyBC/docs/helm/docs/helm/notify-bc-2.0.0.tgz
     version: 2.0.0
-generated: "2024-02-13T22:56:34.319814159Z"
+generated: "2024-02-14T16:34:41.332069955Z"
