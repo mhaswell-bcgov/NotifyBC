@@ -26,9 +26,9 @@ appVersion: '4.1'
 
 dependencies:
   - name: mongodb
-    version: 10.7.1
+    version: 14.3.2
     repository: https://charts.bitnami.com/bitnami
   - name: redis
-    version: 14.7.2
+    version: 16.13.2
     repository: https://charts.bitnami.com/bitnami
     condition: redis.enabled
