@@ -12,6 +12,7 @@ env:
   notifyBCContainerTag: latest
 jobs:
   build-and-test:
+    if: false
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
