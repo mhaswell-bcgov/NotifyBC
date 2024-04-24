@@ -27,7 +27,7 @@ jobs:
           yarn install
           yarn test
   publish-container:
-    if: ${{ github.repository == 'bcgov/NotifyBC' && github.event_name != 'pull_request' }}
+    if: ${{ github.repository == 'bcgov/des-notifybc' && github.event_name != 'pull_request' }}
     needs: build-and-test
     runs-on: ubuntu-latest
     steps:
@@ -63,7 +63,7 @@ jobs:
           tags: ghcr.io/bcgov/notify-bc:${{ env.notifyBCContainerTag }}
           build-args: nodeVersion=${{ vars.NODE_VERSION }}
   deploy:
-    if: ${{ github.repository == 'bcgov/NotifyBC' && github.event_name == 'push' }}
+    if: ${{ github.repository == 'bcgov/des-notifybc' && github.event_name == 'push' }}
     needs: publish-container
     runs-on: ubuntu-latest
     steps:
