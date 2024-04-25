@@ -28,7 +28,7 @@ jobs:
       - name: Set package version
         id: set-package-version
         run: |
-          echo package-tag=$(npm pkg get version) >> $GITHUB_OUTPUT
+          echo package-tag=$(npm pkg get version | tr -d '"') >> $GITHUB_OUTPUT
   publish-container:
     if: ${{ github.repository == 'bcgov/des-notifybc' && github.event_name != 'pull_request' }}
     needs: build-and-test
