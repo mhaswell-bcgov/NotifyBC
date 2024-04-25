@@ -19,15 +19,14 @@ import {securityId, UserProfile} from '@loopback/security';
 import {ConfigurationRepository} from '../repositories';
 
 export class IpWhitelistAuthenticationStrategy
-  implements AuthenticationStrategy
-{
+  implements AuthenticationStrategy {
   name = 'ipWhitelist';
   constructor(
     @inject('repositories.ConfigurationRepository')
     public configurationRepository: ConfigurationRepository,
     @inject(RestBindings.Http.CONTEXT)
     protected httpContext: MiddlewareContext,
-  ) {}
+  ) { }
 
   async authenticate(request: Request): Promise<UserProfile | undefined> {
     let userProfile: UserProfile | undefined;
@@ -39,7 +38,7 @@ export class IpWhitelistAuthenticationStrategy
       )
     ) {
       userProfile = {
-        [securityId]: request.ip,
+        [securityId]: request?.ip ?? '',
         authnStrategy: this.name,
       };
     }

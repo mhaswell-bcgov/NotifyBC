@@ -59,7 +59,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ghcr.io/bcgov/notify-bc:${{ env.notifyBCContainerTag }}
+          tags: ghcr.io/bcgov/des-notify-bc:${{ env.notifyBCContainerTag }}
           build-args: nodeVersion=${{ vars.NODE_VERSION }}
   deploy:
     if: ${{ github.repository == 'bcgov/des-notifybc' && github.event_name == 'push' }}
