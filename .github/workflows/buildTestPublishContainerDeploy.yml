@@ -28,15 +28,6 @@ jobs:
     needs: build-and-test
     runs-on: ubuntu-latest
     steps:
-      - name: Save $notifyBCContainerTag to file
-        run: |
-          echo $notifyBCContainerTag
-          echo $notifyBCContainerTag > notifyBCContainerTag.txt
-      - name: Upload notifyBCContainerTag
-        uses: actions/upload-artifact@v4
-        with:
-          name: notifyBCContainerTag
-          path: notifyBCContainerTag.txt
       - name: Checkout 🛎️
         uses: actions/checkout@v4.1.4
         with:
@@ -45,6 +36,9 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
+          images: |
+            name/app
+            ghcr.io/username/app
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
@@ -58,9 +52,10 @@ jobs:
       - name: Publish Container 🚀
         uses: docker/build-push-action@v5.3.0
         with:
+          context: .
           push: true
-          labels: ghcr.io/bcgov/des-notify-bc
           tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
           build-args: nodeVersion=${{ vars.NODE_VERSION }}
   deploy:
     if: ${{ github.repository == 'bcgov/des-notifybc' && github.event_name == 'push' }}
