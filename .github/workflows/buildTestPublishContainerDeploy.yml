@@ -23,7 +23,7 @@ jobs:
           node-version: ${{ vars.NODE_VERSION }}
       - name: Install and Test 🔧
         run: |
-          yarn install
+          yarn install --frozen-lockfile
           yarn test
   publish-container:
     if: ${{ github.repository == 'bcgov/des-notifybc' && github.event_name != 'pull_request' }}
