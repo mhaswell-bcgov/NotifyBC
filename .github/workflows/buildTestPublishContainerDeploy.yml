@@ -37,8 +37,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            name/app
-            ghcr.io/username/app
+            ghcr.io/bcgov/des-notify-bc
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
