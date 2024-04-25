@@ -38,9 +38,8 @@ export class AccessTokenAuthenticationStrategy
   async authenticate(request: Request): Promise<UserProfile | undefined> {
     try {
       const token: string = this.extractCredentials(request);
-      const userProfile: UserProfile = await this.tokenService.verifyToken(
-        token,
-      );
+      const userProfile: UserProfile =
+        await this.tokenService.verifyToken(token);
       (this.httpContext as AnyObject).args = Object.assign(
         {},
         (this.httpContext as AnyObject).args,
