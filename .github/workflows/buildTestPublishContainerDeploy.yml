@@ -25,13 +25,13 @@ jobs:
         run: |
           npm ci
           yarn test
+      - name: Set package version
+        run: echo "notifyBCContainerTag=$(npm pkg get version)" >> $GITHUB_ENV
   publish-container:
     if: ${{ github.repository == 'bcgov/des-notifybc' && github.event_name != 'pull_request' }}
     needs: build-and-test
     runs-on: ubuntu-latest
     steps:
-      - name: Set package version
-        run: echo "notifyBCContainerTag=$(npm pkg get version)" >> $GITHUB_ENV
       - name: Save $notifyBCContainerTag to file
         run: |
           echo $notifyBCContainerTag > notifyBCContainerTag.txt
