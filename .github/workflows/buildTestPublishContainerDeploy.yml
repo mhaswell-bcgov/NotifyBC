@@ -26,7 +26,9 @@ jobs:
           npm ci
           yarn test
       - name: Set package version
-        run: echo "notifyBCContainerTag=$(npm pkg get version)" >> $GITHUB_ENV
+        run: |
+          echo "notifyBCContainerTag=$(npm pkg get version)" >> $GITHUB_ENV
+          npm pkg get version
   publish-container:
     if: ${{ github.repository == 'bcgov/des-notifybc' && github.event_name != 'pull_request' }}
     needs: build-and-test
@@ -37,7 +39,7 @@ jobs:
           echo $notifyBCContainerTag > notifyBCContainerTag.txt
       - name: Upload notifyBCContainerTag
         if: ${{ startsWith(github.ref, 'refs/heads/') }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: notifyBCContainerTag
           path: notifyBCContainerTag.txt
