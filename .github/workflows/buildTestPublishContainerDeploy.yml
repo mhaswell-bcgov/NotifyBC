@@ -8,11 +8,11 @@ on:
       - published
   pull_request:
   workflow_dispatch:
-env:
-  notifyBCContainerTag: latest
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    outputs:
+      package-tag: ${{ steps.set-package-version.outputs.package-tag }}
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4.1.4
@@ -26,12 +26,15 @@ jobs:
           npm ci
           yarn test
       - name: Set package version
+        id: set-package-version
         run: |
-          echo "notifyBCContainerTag=$(npm pkg get version)" >> $GITHUB_ENV
+          echo package-tag=$(npm pkg get version) >> $GITHUB_OUTPUT
   publish-container:
     if: ${{ github.repository == 'bcgov/des-notifybc' && github.event_name != 'pull_request' }}
     needs: build-and-test
     runs-on: ubuntu-latest
+    env:
+      notifyBCContainerTag: ${{needs.build-and-test.outputs.package-tag}}
     steps:
       - name: Save $notifyBCContainerTag to file
         run: |
