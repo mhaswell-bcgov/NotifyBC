@@ -651,9 +651,8 @@ describe('CRON reDispatchBroadcastPushNotifications', function () {
       });
 
     try {
-      const results = await cronTasks.reDispatchBroadcastPushNotifications(
-        app,
-      )();
+      const results =
+        await cronTasks.reDispatchBroadcastPushNotifications(app)();
       expect(results.length).equal(1);
     } catch (err: any) {
       fail(err);

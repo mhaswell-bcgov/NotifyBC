@@ -81,8 +81,7 @@ export class ConfigurationBeforeSaveInterceptor
     const updateHttpHost = (configurationData: AnyObject) => {
       if (
         configurationData.name === 'notification' &&
-        configurationData.value &&
-        configurationData.value.rss &&
+        configurationData.value?.rss &&
         !configurationData.value.httpHost &&
         !this.appConfig.httpHost
       ) {

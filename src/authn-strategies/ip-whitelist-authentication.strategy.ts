@@ -39,7 +39,7 @@ export class IpWhitelistAuthenticationStrategy
       )
     ) {
       userProfile = {
-        [securityId]: request.ip,
+        [securityId]: request?.ip ?? '',
         authnStrategy: this.name,
       };
     }

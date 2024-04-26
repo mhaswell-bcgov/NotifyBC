@@ -966,6 +966,7 @@ describe('POST /notifications', function () {
       .end();
     await wait(10);
     ((res as any).req as any).socket.destroy();
+    //eslint-disable-next-line @typescript-eslint/no-floating-promises
     res.abort();
     await wait(4000);
     sinon.assert.notCalled(
@@ -978,15 +979,15 @@ describe('POST /notifications', function () {
     sinon.stub(BaseCrudRepository.prototype, 'isAdminReq').resolves(true);
     (BaseController.prototype.sendEmail as sinon.SinonStub).restore();
     const mailer = require('nodemailer/lib/mailer');
-    sinon
-      .stub(mailer.prototype, 'sendMail')
-      .callsFake(async function (this: any) {
-        if (this.options.host !== '127.0.0.1') {
-          // eslint-disable-next-line no-throw-literal
-          throw {command: 'CONN', code: 'ETIMEDOUT'};
-        }
-        return 'ok';
-      });
+    sinon.stub(mailer.prototype, 'sendMail').callsFake(async function (
+      this: any,
+    ) {
+      if (this.options.host !== '127.0.0.1') {
+        // eslint-disable-next-line no-throw-literal
+        throw {command: 'CONN', code: 'ETIMEDOUT'};
+      }
+      return 'ok';
+    });
     const dns = require('dns');
     sinon.stub(dns, 'lookup').callsFake((...args) => {
       const cb: any = args[args.length - 1];

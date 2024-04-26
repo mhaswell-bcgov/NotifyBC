@@ -974,6 +974,7 @@ export class NotificationController extends BaseController {
     }
     if (
       data.channel === 'inApp' ||
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       data.skipSubscriptionConfirmationCheck ||
       data.isBroadcast
     ) {
