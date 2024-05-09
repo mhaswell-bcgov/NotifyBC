@@ -80,7 +80,7 @@
     "ip-range-check": "0.0.2",
     "jmespath": "f-w/jmespath.js#semver:^1.0",
     "js-base64": "^3.6.0",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.21",
     "loopback-connector-mongodb": "^5.5.0",
     "mailparser": "^3.4.0",
