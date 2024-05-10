@@ -1,6 +1,6 @@
 {
   "name": "notify-bc",
-  "version": "4.1.11",
+  "version": "4.1.12",
   "dbSchemaVersion": "0.8.0",
   "description": "A versatile notification API server",
   "keywords": [
@@ -80,7 +80,7 @@
     "ip-range-check": "0.0.2",
     "jmespath": "f-w/jmespath.js#semver:^1.0",
     "js-base64": "^3.6.0",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "loopback-connector-mongodb": "^5.5.0",
     "mailparser": "^3.4.0",
@@ -94,8 +94,8 @@
     "serve-favicon": "^2.5.0",
     "smtp-server": "^3.1.0",
     "tslib": "^2.0.0",
-    "twilio": "^3.7.0",
-    "underscore.string": "^3.3.4"
+    "twilio": "^5.0.4",
+    "underscore.string": "^3.3.6"
   },
   "devDependencies": {
     "@loopback/build": "^11.0.0",
