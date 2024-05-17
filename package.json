@@ -1,6 +1,6 @@
 {
   "name": "notify-bc",
-  "version": "4.1.12",
+  "version": "4.2.0",
   "dbSchemaVersion": "0.8.0",
   "description": "A versatile notification API server",
   "keywords": [
@@ -87,7 +87,6 @@
     "morgan": "^1.10.0",
     "node-rsa": "^0.4.1",
     "nodemailer": "^6.7.3",
-    "nodemailer-direct-transport": "^3.3.2",
     "pluralize": "^7.0.0",
     "randexp": "^0.4.3",
     "semver": "^5.3.0",
