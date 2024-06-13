@@ -12,7 +12,7 @@ defaults:
     working-directory: ./
 jobs:
   deploy_api_on_openshift:
-    if: github.repository_owner == 'kshapka-bcgov'
+    if: github.repository_owner == 'bcgov'
     runs-on: ubuntu-latest
     steps:
       - name: Login to OpenShift and open the correct namespace
@@ -22,7 +22,7 @@ jobs:
           openshift_server_url: ${{ secrets.OpenShiftServerURL }}
           parameters: '{"apitoken": "${{ secrets.OpenShiftToken }}", "acceptUntrustedCerts": "true"}'
           cmd: |
-            oc project c345c5-tools
+            oc project ${{ secrets.OpenShiftNamespace }}
       - name: Create PipelineRun
         run: |
           cat <<EOF | oc create -f -
@@ -30,7 +30,7 @@ jobs:
             kind: PipelineRun
             metadata:
               generateName: send-message-pipelinerun-
-              namespace: c345c5-tools
+              namespace: ${{ secrets.OpenShiftNamespace }}
               labels:
                 tekton.dev/pipeline: send-message-pipeline
             spec:
