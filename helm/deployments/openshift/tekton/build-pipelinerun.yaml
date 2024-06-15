@@ -1,4 +1,3 @@
-# .github/pipelines/pipelinerun.yaml
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
