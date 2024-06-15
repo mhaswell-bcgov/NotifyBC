@@ -2,7 +2,7 @@ name: Build API Image.
 on:
   push:
     branches:
-      - development
+      - v5
     paths:
       - 'src/**'
   workflow_dispatch:
