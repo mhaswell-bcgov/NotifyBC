@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - v4
+      - v5
   release:
     types:
       - published
