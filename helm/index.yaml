@@ -3,7 +3,7 @@ entries:
   notify-bc:
   - apiVersion: v2
     appVersion: "5.1"
-    created: "2024-06-19T23:41:34.648228348Z"
+    created: "2024-06-19T16:44:46.345869-07:00"
     dependencies:
     - name: mongodb
       repository: https://charts.bitnami.com/bitnami
@@ -18,6 +18,120 @@ entries:
     name: notify-bc
     type: application
     urls:
-    - https://bcgov.github.io/des-notifybc/helm/notify-bc-5.1.2.tgz
+    - notify-bc-5.1.2.tgz
     version: 5.1.2
-generated: "2024-06-19T23:41:34.637248225Z"
+  - apiVersion: v2
+    appVersion: "4.1"
+    created: "2024-06-19T16:44:46.306102-07:00"
+    dependencies:
+    - name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 14.3.2
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.13.2
+    description: NotifyBC Helm chart for Kubernetes
+    digest: b32ea5bbea5f52b1507f720ed595d06703a998e4b37d0acf8688b6c63e5f8b33
+    icon: https://raw.githubusercontent.com/bcgov/NotifyBC/main/favicon.ico
+    name: notify-bc
+    type: application
+    urls:
+    - notify-bc-4.1.11.tgz
+    version: 4.1.11
+  - apiVersion: v2
+    appVersion: "4.1"
+    created: "2024-06-19T16:44:46.332997-07:00"
+    dependencies:
+    - name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 14.3.2
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.13.2
+    description: NotifyBC Helm chart for Kubernetes
+    digest: a377c14d11a3a7f95e930e1773c623dabe7c1b5ceefc17f62dcc0e4ef1a2553c
+    icon: https://raw.githubusercontent.com/bcgov/NotifyBC/main/favicon.ico
+    name: notify-bc
+    type: application
+    urls:
+    - notify-bc-4.1.3.tgz
+    version: 4.1.3
+  - apiVersion: v2
+    appVersion: "4.1"
+    created: "2024-06-19T16:44:46.320559-07:00"
+    dependencies:
+    - name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 14.3.2
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.13.2
+    description: NotifyBC Helm chart for Kubernetes
+    digest: cdae314a743a3ef0eb7a9a608eb525df4beabce31bfa523e2a46661f008e16a0
+    icon: https://raw.githubusercontent.com/bcgov/NotifyBC/main/favicon.ico
+    name: notify-bc
+    type: application
+    urls:
+    - notify-bc-4.1.2.tgz
+    version: 4.1.2
+  - apiVersion: v2
+    appVersion: "4.1"
+    created: "2024-06-19T16:44:46.293757-07:00"
+    dependencies:
+    - name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 14.3.2
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.13.2
+    description: NotifyBC Helm chart for Kubernetes
+    digest: b5ed40035d2dfb7d56e9430dd4763e9352d0e23b20f2cec2bc4ceb72a4a35f8c
+    icon: https://raw.githubusercontent.com/bcgov/NotifyBC/main/favicon.ico
+    name: notify-bc
+    type: application
+    urls:
+    - notify-bc-4.1.1.tgz
+    version: 4.1.1
+  - apiVersion: v2
+    appVersion: "4.1"
+    created: "2024-06-19T16:44:46.275905-07:00"
+    dependencies:
+    - name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 14.3.2
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.13.2
+    description: NotifyBC Helm chart for Kubernetes
+    digest: 4e9864a0a3d3b95ec87fae6fd57434e10ee10cc178a6325f1e3d6c1f68f5a2af
+    icon: https://raw.githubusercontent.com/bcgov/NotifyBC/main/favicon.ico
+    name: notify-bc
+    type: application
+    urls:
+    - notify-bc-4.1.0.tgz
+    version: 4.1.0
+  - apiVersion: v2
+    appVersion: "5.0"
+    created: "2024-06-19T16:44:46.266743-07:00"
+    dependencies:
+    - name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 14.3.2
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.13.2
+    description: NotifyBC Helm chart for Kubernetes
+    digest: fb1d2c8e262bfd8357d43c262c488ae835044d91a852282b6b7be153663f620d
+    icon: https://raw.githubusercontent.com/bcgov/NotifyBC/main/favicon.ico
+    name: notify-bc
+    type: application
+    urls:
+    - notify-bc-2.0.0.tgz
+    version: 2.0.0
+generated: "2024-06-19T16:44:46.253805-07:00"
