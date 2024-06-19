@@ -24,4 +24,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           charts_dir: ./
           branch: gh-pages
-          target_dir: docs/helm
+          target_dir: helm
