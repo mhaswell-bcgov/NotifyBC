@@ -4,17 +4,18 @@ on:
   release:
     types:
       - published
-  pull_request:
-    paths:
-      - helm/Chart.yaml
   workflow_dispatch:
+    inputs:
+      chart_version:
+        description: 'The chart version to create. Must be a valid semver string and should indicate that it is not a release chart version (eg. 5.1.2-pr36).'
+        required: true
 
 jobs:
   release:
     # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
     # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
     env:
-      CHART_VERSION: "${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.number) || null }}"
+      CHART_VERSION: "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.chart_version || null }}"
     permissions:
       contents: write
     runs-on: ubuntu-latest
