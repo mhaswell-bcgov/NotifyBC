@@ -106,8 +106,8 @@ spec:
         - name: {{ .Chart.Name }}-fluent-bit
           image: {{ .Values.fluentbit.imageRegistry }}
           imagePullPolicy: {{ .Values.fluentbit.imagePullPolicy }}
-          {{- if .Values.fluent-bit.securityContext.enabled }}
-          securityContext: {{- omit .Values.fluent-bit.securityContext "enabled" | toYaml | nindent 12 }}
+          {{- if .Values.fluentbit.securityContext.enabled }}
+          securityContext: {{- omit .Values.fluentbit.securityContext "enabled" | toYaml | nindent 12 }}
           {{- end }}
           env:
             - name: SERVER_LOGFILE
@@ -137,8 +137,8 @@ spec:
             periodSeconds: 60
             successThreshold: 1
             failureThreshold: 3
-          {{- if .Values.fluent-bit.resources }}
-          resources: {{- toYaml .Values.fluent-bit.resources | nindent 12 }}
+          {{- if .Values.fluentbit.resources }}
+          resources: {{- toYaml .Values.fluentbit.resources | nindent 12 }}
           {{- end }}
           volumeMounts:
             - name: fluentbit-config
