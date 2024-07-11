@@ -106,6 +106,28 @@ spec:
         - name: {{ .Chart.Name }}-fluent-bit
           image: {{ .Values.fluentbit.imageRegistry }}
           imagePullPolicy: {{ .Values.fluentbit.imagePullPolicy }}
+          ports:
+            - name: logs
+              containerPort: 2020
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: logs
+            initialDelaySeconds: 10
+            timeoutSeconds: 1
+            periodSeconds: 60
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: logs
+            initialDelaySeconds: 10
+            timeoutSeconds: 1
+            periodSeconds: 60
+            successThreshold: 1
+            failureThreshold: 3
           {{- if .Values.fluentbit.securityContext.enabled }}
           securityContext: {{- omit .Values.fluentbit.securityContext "enabled" | toYaml | nindent 12 }}
           {{- end }}
