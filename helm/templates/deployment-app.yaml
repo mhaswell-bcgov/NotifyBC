@@ -102,7 +102,7 @@ spec:
               mountPath: {{ .mountPath }}
               subPath: {{ .subPath }}
             {{- end }}
-        {{- if .Values.logRetention.enabled }}
+        {{- if .Values.fluentbit.enabled }}
         - name: {{ .Chart.Name }}-fluent-bit
           image: {{ .Values.fluentbit.imageRegistry }}
           imagePullPolicy: {{ .Values.fluentbit.imagePullPolicy }}

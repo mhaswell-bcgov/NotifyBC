@@ -5,8 +5,5 @@ dependencies:
 - name: redis
   repository: https://charts.bitnami.com/bitnami
   version: 16.13.2
-- name: fluent-bit
-  repository: https://fluent.github.io/helm-charts
-  version: 0.47.0
-digest: sha256:4fafceb9598c28538e9cc1bb41fc334999ca5bca49d08bfecb9fc6b95bcb0854
-generated: "2024-07-11T14:33:24.034365-07:00"
+digest: sha256:e3cb6ade019f5169d547ac65001758b57bebf2beb6d8e47c4053f4d2e5a6ba06
+generated: "2024-07-11T15:27:57.374585-07:00"
