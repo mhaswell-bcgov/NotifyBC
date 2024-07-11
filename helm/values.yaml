@@ -179,3 +179,9 @@ redis:
       enabled: false
     containerSecurityContext:
       enabled: false
+
+logRetention:
+  enabled: true
+  persistence:
+    size: 1Gi
+    storageClassName: netapp-file-backup

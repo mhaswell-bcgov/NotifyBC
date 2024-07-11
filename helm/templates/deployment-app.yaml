@@ -102,6 +102,50 @@ spec:
               mountPath: {{ .mountPath }}
               subPath: {{ .subPath }}
             {{- end }}
+        {{- if .Values.logRetention.enabled }}
+        - name: {{ .Chart.Name }}-fluent-bit
+          image: {{ .Values.fluent-bit.imageRegistry }}
+          imagePullPolicy: {{ .Values.fluent-bit.imagePullPolicy }}
+          {{- if .Values.fluent-bit.securityContext.enabled }}
+          securityContext: {{- omit .Values.fluent-bit.securityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
+          env:
+            - name: SERVER_LOGFILE
+              value: /tmp/*.log
+          ports:
+            - name: metrics
+              containerPort: 2020
+              protocol: TCP
+            - name: http-plugin
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: metrics
+            initialDelaySeconds: 10
+            timeoutSeconds: 1
+            periodSeconds: 60
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: metrics
+            initialDelaySeconds: 10
+            timeoutSeconds: 1
+            periodSeconds: 60
+            successThreshold: 1
+            failureThreshold: 3
+          {{- if .Values.fluent-bit.resources }}
+          resources: {{- toYaml .Values.fluent-bit.resources | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: fluentbit-config
+              mountPath: /fluent-bit/etc
+            - name: log-storage
+              mountPath: /tmp/
+        {{- end }}
       volumes:
         - configMap:
             name: {{include "NotifyBC.fullname" .}}

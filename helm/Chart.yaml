@@ -32,3 +32,7 @@ dependencies:
     version: 16.13.2
     repository: https://charts.bitnami.com/bitnami
     condition: redis.enabled
+  - name: fluent-bit
+    version: 0.47.0
+    repository: https://fluent.github.io/helm-charts
+    condition: logRetention.enabled
