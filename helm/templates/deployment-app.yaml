@@ -104,8 +104,8 @@ spec:
             {{- end }}
         {{- if .Values.logRetention.enabled }}
         - name: {{ .Chart.Name }}-fluent-bit
-          image: {{ .Values.fluent-bit.imageRegistry }}
-          imagePullPolicy: {{ .Values.fluent-bit.imagePullPolicy }}
+          image: {{ .Values.fluentbit.imageRegistry }}
+          imagePullPolicy: {{ .Values.fluentbit.imagePullPolicy }}
           {{- if .Values.fluent-bit.securityContext.enabled }}
           securityContext: {{- omit .Values.fluent-bit.securityContext "enabled" | toYaml | nindent 12 }}
           {{- end }}
