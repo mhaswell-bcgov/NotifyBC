@@ -70,7 +70,7 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: [
-            "touch /tmp/log/app.log"
+            "touch /tmp/log/app.log",
             "2>&1 > /tmp/log/app.log"
           ]
           ports:
