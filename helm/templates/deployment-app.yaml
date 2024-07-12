@@ -69,6 +69,7 @@ spec:
                   key: redis-password
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["2>&1 > /var/log/app.log"]
           ports:
             - name: web
               containerPort: 3000
@@ -102,6 +103,8 @@ spec:
               mountPath: {{ .mountPath }}
               subPath: {{ .subPath }}
             {{- end }}
+            - name: local-logs
+              mountPath: /var/log/
         {{- if .Values.fluentbit.enabled }}
         - name: {{ .Chart.Name }}-fluent-bit
           image: {{ .Values.fluentbit.imageRegistry }}
@@ -110,24 +113,6 @@ spec:
             - name: logs
               containerPort: 2020
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: logs
-            initialDelaySeconds: 10
-            timeoutSeconds: 1
-            periodSeconds: 60
-            successThreshold: 1
-            failureThreshold: 3
-          readinessProbe:
-            httpGet:
-              path: /
-              port: logs
-            initialDelaySeconds: 10
-            timeoutSeconds: 1
-            periodSeconds: 60
-            successThreshold: 1
-            failureThreshold: 3
           {{- if .Values.fluentbit.securityContext.enabled }}
           securityContext: {{- omit .Values.fluentbit.securityContext "enabled" | toYaml | nindent 12 }}
           {{- end }}
@@ -136,15 +121,21 @@ spec:
           {{- end }}
           volumeMounts:
             - name: log-storage
-              mountPath: /tmp/
+              mountPath: /tmp/pvc/
+            - name: local-logs
+              mountPath: /tmp/logs/
         {{- end }}
       volumes:
         - configMap:
             name: {{include "NotifyBC.fullname" .}}
           name: config-volume
+        - name: local-logs
+          emptyDir: {}
+        {{- if .Values.fluentbit.enabled }}
         - name: log-storage
           persistentVolumeClaim:
             claimName: {{ include "NotifyBC.fullname" . }}-logs
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
