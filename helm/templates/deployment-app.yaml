@@ -70,8 +70,8 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: [
-            "touch /tmp/log/app.log",
-            "2>&1 > /tmp/log/app.log"
+            "touch log/app.log",
+            "2>&1 > log/app.log"
           ]
           ports:
             - name: web
@@ -107,7 +107,7 @@ spec:
               subPath: {{ .subPath }}
             {{- end }}
             - name: local-logs
-              mountPath: /tmp/log/
+              mountPath: /home/node/app/log/
         {{- if .Values.fluentbit.enabled }}
         - name: {{ .Chart.Name }}-fluent-bit
           image: {{ .Values.fluentbit.imageRegistry }}
