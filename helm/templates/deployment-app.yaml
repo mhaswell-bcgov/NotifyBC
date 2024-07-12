@@ -69,7 +69,10 @@ spec:
                   key: redis-password
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["2>&1 > /var/log/app.log"]
+          command: [
+            "touch /tmp/log/app.log"
+            "2>&1 > /tmp/log/app.log"
+          ]
           ports:
             - name: web
               containerPort: 3000
@@ -104,7 +107,7 @@ spec:
               subPath: {{ .subPath }}
             {{- end }}
             - name: local-logs
-              mountPath: /var/log/
+              mountPath: /tmp/log/
         {{- if .Values.fluentbit.enabled }}
         - name: {{ .Chart.Name }}-fluent-bit
           image: {{ .Values.fluentbit.imageRegistry }}
