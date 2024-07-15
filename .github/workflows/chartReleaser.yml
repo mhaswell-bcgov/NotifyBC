@@ -18,7 +18,7 @@ jobs:
     # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
     # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
     env:
-      CHART_VERSION: "${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.chart_version) || (github.event_name == 'pull_request' && github.event.pull_request.number) }}"
+      CHART_VERSION: "${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.chart_version) || (github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number)) }}"
     permissions:
       contents: write
     runs-on: ubuntu-latest
