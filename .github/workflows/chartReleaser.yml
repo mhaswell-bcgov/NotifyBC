@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
     inputs:
       chart_version:
-        description: 'The chart version to create. Must be a valid semver string and should indicate that it is not a release chart version (eg. 5.1.2-pr36).'
+        description: 'The chart version to create. Will be appended to the current version from Chart.yaml (eg. "pr36" on Chart.yaml version: 5.1.2 produces "5.1.2-pr36").'
         required: true
 
 jobs:
@@ -18,12 +18,15 @@ jobs:
     # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
     # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
     env:
-      CHART_VERSION: "${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.chart_version) || (github.event_name == 'pull_request' && format('5.1.2-pr{0}', github.event.pull_request.number)) }}"
+      CHART_VERSION: "${{ (github.event_name == 'workflow_dispatch' && format('-{0}', github.event.inputs.chart_version)) || (github.event_name == 'pull_request' && format('-pr{0}', github.event.pull_request.number)) }}"
     permissions:
       contents: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Get helm chart version
+        id: chart
+        run: "echo \"::set-output name=version::(helm show chart helm | grep -o 'version: [^ ]*' | cut -d' ' -f 2)\""
       - name: Publish Helm charts
         uses: stefanprodan/helm-gh-pages@master
         with:
@@ -31,4 +34,4 @@ jobs:
           charts_dir: ./
           branch: gh-pages
           target_dir: helm
-          chart_version: ${{ env.CHART_VERSION || null }}
+          chart_version: ${{ format('{0}{1}', steps.chart.outputs.version, env.CHART_VERSION)  }}
