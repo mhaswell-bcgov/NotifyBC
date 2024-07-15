@@ -26,7 +26,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Get helm chart version
         id: chart
-        run: "echo \"::set-output name=version::(helm show chart helm | grep 'version:' | cut -f2 -d' ')\""
+        run: "echo \"::set-output name=version::$(helm show chart helm | grep 'version:' | cut -f2 -d' ')\""
       - name: Publish Helm charts
         uses: stefanprodan/helm-gh-pages@master
         with:
@@ -34,4 +34,4 @@ jobs:
           charts_dir: ./
           branch: gh-pages
           target_dir: helm
-          chart_version: ${{ format('{0}{1}', steps.chart.outputs.version, env.CHART_VERSION)  }}
+          chart_version: ${{ format('{0}{1}', steps.chart.outputs.version, env.CHART_VERSION || '') }}
