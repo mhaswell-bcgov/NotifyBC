@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
     inputs:
       chart_version:
-        description: 'The chart version to create. Will be appended to the current version from helm/Chart.yaml (eg. "pr36" on Chart.yaml version: 5.1.2 produces "5.1.2-pr36").'
+        description: 'The chart pre-release version label to create. Will be appended to the current version from helm/Chart.yaml (eg. Entering "pr36" with a helm/Chart.yaml at version 5.1.2 produces the final chart tag "5.1.2-pr36").'
         required: true
 
 jobs:
