@@ -17,10 +17,9 @@ COPY --chown=node . .
 
 RUN npm i --omit=optional && npm run build && npm i --omit=dev --omit=optional
 
-RUN ln -sf /dev/stdout /var/log/app/access.log \
-    && ln -sf /dev/stderr /var/log/app/error.log
+RUN mkdir -p /var/log/app/ && touch /var/log/app/access.log
 
 ENV HOST=0.0.0.0 PORT=3000 SMTP_PORT=2525 NODE_ENV=production NOTIFYBC_WORKER_PROCESS_COUNT=1
 
 EXPOSE ${PORT} ${SMTP_PORT}
-CMD [ "node", "." ]
+CMD [ "/bin/sh", "-c", "node .  > /var/log/app/access.log 2>&1" ]
