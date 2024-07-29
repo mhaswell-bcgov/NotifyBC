@@ -536,7 +536,7 @@ export class CronTasksService {
       ) {
         this.logger.verbose(
           new Date().toLocaleString() +
-            ': end reDispatchBroadcastPushNotifications.',
+            ': end reDispatchBroadcastPushNotifications (none).',
         );
         return;
       }
