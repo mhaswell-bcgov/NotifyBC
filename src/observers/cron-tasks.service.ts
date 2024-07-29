@@ -12,22 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { HttpException, Injectable, Logger } from '@nestjs/common';
+import {HttpException, Injectable, Logger} from '@nestjs/common';
 import Bottleneck from 'bottleneck';
-import { CronJob } from 'cron';
+import {CronJob} from 'cron';
 import FeedParser from 'feedparser';
-import { differenceWith } from 'lodash';
-import { AnyObject } from 'mongoose';
-import { Readable } from 'node:stream';
-import { AccessTokenService } from 'src/api/administrators/access-token.service';
-import { BouncesService } from 'src/api/bounces/bounces.service';
-import { ConfigurationsService } from 'src/api/configurations/configurations.service';
-import { NotificationsService } from 'src/api/notifications/notifications.service';
-import { SubscriptionsService } from 'src/api/subscriptions/subscriptions.service';
-import { AppConfigService } from 'src/config/app-config.service';
-import { RssItem } from 'src/rss/entities/rss-item.entity';
-import { Rss } from 'src/rss/entities/rss.entity';
-import { RssService } from 'src/rss/rss.service';
+import {differenceWith} from 'lodash';
+import {AnyObject} from 'mongoose';
+import {Readable} from 'node:stream';
+import {AccessTokenService} from 'src/api/administrators/access-token.service';
+import {BouncesService} from 'src/api/bounces/bounces.service';
+import {ConfigurationsService} from 'src/api/configurations/configurations.service';
+import {NotificationsService} from 'src/api/notifications/notifications.service';
+import {SubscriptionsService} from 'src/api/subscriptions/subscriptions.service';
+import {AppConfigService} from 'src/config/app-config.service';
+import {RssItem} from 'src/rss/entities/rss-item.entity';
+import {Rss} from 'src/rss/entities/rss.entity';
+import {RssService} from 'src/rss/rss.service';
 
 @Injectable()
 export class CronTasksService {
@@ -206,6 +206,10 @@ export class CronTasksService {
   }
 
   dispatchLiveNotifications() {
+    this.logger.verbose(
+      new Date().toLocaleString() +
+        ': begin dispatchLiveNotifications.',
+    );
     return async (): Promise<void> => {
       const livePushNotifications = await this.notificationsService.findAll(
         {
@@ -222,6 +226,10 @@ export class CronTasksService {
         undefined,
       );
       if (livePushNotifications && livePushNotifications.length === 0) {
+        this.logger.verbose(
+          new Date().toLocaleString() +
+            ': end dispatchLiveNotifications (none).',
+        );
         return;
       }
       await Promise.all(
@@ -254,6 +262,10 @@ export class CronTasksService {
           }
         }),
       );
+      this.logger.verbose(
+        new Date().toLocaleString() +
+          ': end dispatchLiveNotifications.',
+      );
     };
   }
 
@@ -264,6 +276,10 @@ export class CronTasksService {
   }
 
   async checkRssConfigUpdates(runOnInit = false) {
+    this.logger.verbose(
+      new Date().toLocaleString() +
+        ': begin checkRssConfigUpdates.',
+    );
     const rssNtfctnConfigItems = await this.configurationsService.findAll({
       where: {
         name: 'notification',
@@ -446,6 +462,10 @@ export class CronTasksService {
       });
     }
     this.lastConfigCheck = Date.now();
+    this.logger.verbose(
+      new Date().toLocaleString() +
+        ': end checkRssConfigUpdates.',
+    );
     return this.rssTasks;
   }
 
@@ -489,6 +509,10 @@ export class CronTasksService {
   }
 
   reDispatchBroadcastPushNotifications() {
+    this.logger.verbose(
+      new Date().toLocaleString() +
+        ': begin reDispatchBroadcastPushNotifications.',
+    );
     return async (): Promise<void> => {
       const staleBroadcastPushNotifications =
         await this.notificationsService.findAll(
@@ -510,6 +534,10 @@ export class CronTasksService {
         !staleBroadcastPushNotifications ||
         staleBroadcastPushNotifications.length === 0
       ) {
+        this.logger.verbose(
+          new Date().toLocaleString() +
+            ': end reDispatchBroadcastPushNotifications.',
+        );
         return;
       }
       await Promise.all(
@@ -542,6 +570,10 @@ export class CronTasksService {
             }
           },
         ),
+      );
+      this.logger.verbose(
+        new Date().toLocaleString() +
+          ': end reDispatchBroadcastPushNotifications.',
       );
     };
   }
