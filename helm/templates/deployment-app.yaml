@@ -107,7 +107,7 @@ spec:
               subPath: {{ .subPath }}
             {{- end }}
             - name: local-logs
-              mountPath: /home/node/app/log/
+              mountPath: /tmp/logs/
         {{- if .Values.fluentbit.enabled }}
         - name: {{ .Chart.Name }}-fluent-bit
           image: {{ .Values.fluentbit.imageRegistry }}
