@@ -9,7 +9,6 @@ USER node
 
 # Create app directory (with user `node`)
 RUN mkdir -p /home/node/app
-RUN touch /var/log/access.log
 
 WORKDIR /home/node/app
 
