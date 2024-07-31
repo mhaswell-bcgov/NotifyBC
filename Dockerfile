@@ -21,4 +21,4 @@ RUN npm i --omit=optional && npm run build && npm i --omit=dev --omit=optional
 ENV HOST=0.0.0.0 PORT=3000 SMTP_PORT=2525 NODE_ENV=production NOTIFYBC_WORKER_PROCESS_COUNT=1
 
 EXPOSE ${PORT} ${SMTP_PORT}
-CMD [ "/bin/sh", "-c", "node .  > /var/log/access.log 2>&1" ]
+CMD CMD node . 2>&1 | tee test.log
