@@ -253,6 +253,10 @@ export class CronTasksService {
               'Content-Type': 'application/json',
             },
           };
+          this.logger.verbose(
+            new Date().toLocaleString() +
+              ': end dispatchLiveNotifications - ' + JSON.stringify(livePushNotification),
+          );
           try {
             const res = await fetch(url, options);
             if (res.status >= 400)
@@ -261,10 +265,6 @@ export class CronTasksService {
             this.logger.error(ex);
           }
         }),
-      );
-      this.logger.verbose(
-        new Date().toLocaleString() +
-          ': end dispatchLiveNotifications.',
       );
     };
   }
