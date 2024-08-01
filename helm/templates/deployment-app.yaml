@@ -123,6 +123,7 @@ spec:
               mountPath: /tmp/pvc/
             - name: local-logs
               mountPath: /tmp/logs/
+              readOnly: true
         {{- end }}
       volumes:
         - configMap:
