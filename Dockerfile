@@ -12,7 +12,7 @@ RUN mkdir -p /home/node/app
 
 WORKDIR /home/node/app
 
-RUN touch /home/node/app/access.log && chmod 777 /home/node/app/access.log
+RUN mkdir /home/node/app/logs/ && touch /home/node/app/logs/access.log && chmod 777 /home/node/app/access.log
 
 # Bundle app source code
 COPY --chown=node . .
