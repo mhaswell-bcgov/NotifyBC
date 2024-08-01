@@ -12,7 +12,7 @@ RUN mkdir -p /home/node/app
 
 WORKDIR /home/node/app
 
-RUN touch /home/node/app/logs/access.log && chmod 777 /home/node/app/access.log
+RUN mkdir /home/node/app/logs/ && touch /home/node/app/logs/access.log && chmod 777 /home/node/app/logs/access.log
 
 # Bundle app source code
 COPY --chown=node . .
@@ -22,4 +22,4 @@ RUN npm i --omit=optional && npm run build && npm i --omit=dev --omit=optional
 ENV HOST=0.0.0.0 PORT=3000 SMTP_PORT=2525 NODE_ENV=production NOTIFYBC_WORKER_PROCESS_COUNT=1
 
 EXPOSE ${PORT} ${SMTP_PORT}
-CMD node . 2>&1 | tee /home/node/app/access.log
+CMD node . 2>&1 | tee /home/node/app/logs/access.log
