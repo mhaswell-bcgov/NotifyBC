@@ -198,6 +198,8 @@ fluentbit:
       cpu: 10m
       memory: 16Mi
   config:
+    customParsers: |
+      #
     service: |
       # [SERVICE]
       #     Daemon Off
