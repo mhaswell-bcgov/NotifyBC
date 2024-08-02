@@ -198,6 +198,8 @@ fluentbit:
       cpu: 10m
       memory: 16Mi
   config:
+    customParsers: ""
+    service: ""
     inputs: |
       [INPUT]
           Name tail
@@ -205,6 +207,7 @@ fluentbit:
           Tag app.access.log
           Mem_Buf_Limit 5MB
           Skip_Long_Lines Off
+    filters: ""
     outputs: |
       [OUTPUT]
           Name file
