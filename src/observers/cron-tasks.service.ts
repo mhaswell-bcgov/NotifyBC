@@ -250,7 +250,10 @@ export class CronTasksService {
             if (res.status >= 400)
               throw new HttpException(res.statusText, res.status);
           } catch (ex: any) {
+            const context = 'dispatchLiveNotifications';
             this.logger.error(ex);
+            this.logger.verbose(url, context);
+            this.logger.verbose(options, context);
           }
         }),
       );
@@ -538,7 +541,10 @@ export class CronTasksService {
               if (res.status >= 400)
                 throw new HttpException(res.statusText, res.status);
             } catch (ex: any) {
+              const context = 'reDispatchLiveNotifications';
               this.logger.error(ex);
+              this.logger.verbose(url, context);
+              this.logger.verbose(options, context);
             }
           },
         ),
