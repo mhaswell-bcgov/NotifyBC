@@ -752,7 +752,7 @@ export class NotificationsController extends BaseController {
                 task.startIdx;
               Logger.log('Making request to: ' + uri);
               const response = await axios.get(uri);
-              Logger.log('Response: ' + JSON.stringify(response));
+              Logger.log(response);
               return response.data;
             }, broadcastSubRequestBatchSize);
             // re-submit task on error if
