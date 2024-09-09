@@ -688,6 +688,7 @@ export class NotificationsController extends BaseController {
         const broadcastSubRequestBatchSize =
           this.appConfig.notification?.broadcastSubRequestBatchSize;
         let startIdx: undefined | number = this.req['NotifyBC.startIdx'];
+        Logger.log('Sending notification ' + startIdx);
         if (typeof startIdx !== 'number') {
           // main request
           const subCandidates = await this.subscriptionsService.findAll(
