@@ -750,7 +750,9 @@ export class NotificationsController extends BaseController {
                 data.id +
                 '/broadcastToChunkSubscribers?start=' +
                 task.startIdx;
+              Logger.log('Making request to: ' + uri);
               const response = await axios.get(uri);
+              Logger.log('Response: ' + JSON.stringify(response));
               return response.data;
             }, broadcastSubRequestBatchSize);
             // re-submit task on error if
