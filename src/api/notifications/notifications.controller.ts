@@ -242,8 +242,15 @@ export class NotificationsController extends BaseController {
   async create(
     @Body() notification: CreateNotificationDto,
   ): Promise<Notification> {
-    await this.preCreationValidation(notification);
+    try {
+      await this.preCreationValidation(notification);
+    } catch (e) {
+      Logger.error(e);
+    }
+
     const res = await this.notificationsService.create(notification, this.req);
+
+    Logger.log(res);
     this.req['args'] = { data: res };
     return this.dispatchNotification(res);
   }
