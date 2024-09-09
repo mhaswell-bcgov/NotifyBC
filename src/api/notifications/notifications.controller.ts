@@ -724,6 +724,7 @@ export class NotificationsController extends BaseController {
             );
           }, 60000);
 
+          Logger.log('Found subscription candidates: ' + subCandidates.length);
           const count = subCandidates.length;
 
           if (count <= this.broadcastSubscriberChunkSize) {
