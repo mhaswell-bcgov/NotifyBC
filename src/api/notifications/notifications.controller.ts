@@ -412,6 +412,8 @@ export class NotificationsController extends BaseController {
 
   async postBroadcastProcessing(data) {
     data = await this.notificationsService.findById(data.id);
+    Logger.log('postBroadcastProcessing');
+    Logger.log(data);
     const res = await this.subscriptionsService.findAll(
       {
         fields: {
