@@ -468,6 +468,7 @@ export class NotificationsController extends BaseController {
       startIdx,
       startIdx + this.broadcastSubscriberChunkSize,
     );
+    Logger.log(subChunk);
     pullAll(
       pullAll(
         pullAll(
@@ -605,6 +606,7 @@ export class NotificationsController extends BaseController {
                   undefined,
                   HttpStatus.INTERNAL_SERVER_ERROR,
                 );
+              Logger.log('Sending email');
               await this.sendEmail(mailOptions);
               return await this.notificationMsgCB(data, null, e);
             } catch (ex) {
