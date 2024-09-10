@@ -385,6 +385,9 @@ export class NotificationsController extends BaseController {
   guaranteedBroadcastPushDispatchProcessing =
     this.appConfig.notification?.guaranteedBroadcastPushDispatchProcessing;
   async notificationMsgCB(data, err: any, e: Subscription) {
+    Logger.log('Guaranteed broadcast push dispatch processing? ' + this.guaranteedBroadcastPushDispatchProcessing);
+    Logger.log(data);
+    Logger.log(e);
     if (err) {
       return this.updateBroadcastPushNotificationStatus(
         data,
