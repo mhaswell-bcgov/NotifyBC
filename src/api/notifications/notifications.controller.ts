@@ -609,7 +609,9 @@ export class NotificationsController extends BaseController {
               Logger.log('Sending email');
               const res = await this.sendEmail(mailOptions);
               Logger.log(res);
-              return await this.notificationMsgCB(data, null, e);
+              const notificationResponse = await this.notificationMsgCB(data, null, e);
+              Logger.log(notificationResponse);
+              return notificationResponse;
             } catch (ex) {
               return await this.notificationMsgCB(data, ex, e);
             }
