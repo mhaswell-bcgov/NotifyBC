@@ -607,7 +607,8 @@ export class NotificationsController extends BaseController {
                   HttpStatus.INTERNAL_SERVER_ERROR,
                 );
               Logger.log('Sending email');
-              await this.sendEmail(mailOptions);
+              const res = await this.sendEmail(mailOptions);
+              Logger.log(res);
               return await this.notificationMsgCB(data, null, e);
             } catch (ex) {
               return await this.notificationMsgCB(data, ex, e);
