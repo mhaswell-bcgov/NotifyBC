@@ -247,7 +247,7 @@ export class NotificationsController extends BaseController {
 
     Logger.log(res);
     this.req['args'] = {data: res};
-    return this.dispatchNotification(res);
+    return await this.dispatchNotification(res);
   }
 
   @Get()
