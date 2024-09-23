@@ -363,6 +363,7 @@ export class NotificationsController extends BaseController {
     payload: any,
   ) {
     let success = false;
+    Logger.log('data', 'updateBroadcastPushNotificationStatus');
     while (!success) {
       try {
         const val = payload instanceof Array ? {$each: payload} : payload;
@@ -386,7 +387,6 @@ export class NotificationsController extends BaseController {
     this.appConfig.notification?.guaranteedBroadcastPushDispatchProcessing;
   async notificationMsgCB(data, err: any, e: Subscription) {
     Logger.log('Guaranteed broadcast push dispatch processing? ' + this.guaranteedBroadcastPushDispatchProcessing);
-    Logger.log(err);
     if (err) {
       return this.updateBroadcastPushNotificationStatus(
         data,
