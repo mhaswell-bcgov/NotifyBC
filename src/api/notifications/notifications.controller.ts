@@ -363,7 +363,7 @@ export class NotificationsController extends BaseController {
     payload: any,
   ) {
     let success = false;
-    Logger.log('data', 'updateBroadcastPushNotificationStatus');
+    Logger.log(JSON.stringify(data), 'updateBroadcastPushNotificationStatus');
     while (!success) {
       try {
         const val = payload instanceof Array ? {$each: payload} : payload;
@@ -378,7 +378,9 @@ export class NotificationsController extends BaseController {
         );
         success = true;
         return;
-      } catch (ex) { }
+      } catch (ex) {
+        Logger.log(JSON.stringify(ex), 'updateBroadcastPushNotificationStatus catch');
+      }
       await wait(1000);
     }
   }
