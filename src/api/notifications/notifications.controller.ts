@@ -390,6 +390,7 @@ export class NotificationsController extends BaseController {
   async notificationMsgCB(data, err: any, e: Subscription) {
     Logger.log('Guaranteed broadcast push dispatch processing? ' + this.guaranteedBroadcastPushDispatchProcessing);
     if (err) {
+      Logger.log('err', 'notificationMsgCB');
       return this.updateBroadcastPushNotificationStatus(
         data,
         NotificationDispatchStatusField.failed,
@@ -403,6 +404,7 @@ export class NotificationsController extends BaseController {
       this.guaranteedBroadcastPushDispatchProcessing ||
       this.handleBounce
     ) {
+      Logger.log('not err', 'notificationMsgCB');
       return this.updateBroadcastPushNotificationStatus(
         data,
         NotificationDispatchStatusField.successful,
