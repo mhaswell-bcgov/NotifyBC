@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {Injectable, OnApplicationBootstrap} from '@nestjs/common';
-import {CronJob} from 'cron';
-import {AppConfigService} from 'src/config/app-config.service';
-import {CronTasksService} from './cron-tasks.service';
+import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
+import { CronJob } from 'cron';
+import { AppConfigService } from 'src/config/app-config.service';
+import { CronTasksService } from './cron-tasks.service';
 
 @Injectable()
 export class CronService implements OnApplicationBootstrap {
@@ -38,61 +38,75 @@ export class CronService implements OnApplicationBootstrap {
     const cronConfig = this.appConfigService.get('cron') ?? {};
     // start purgeData cron
     const cronConfigPurgeData = cronConfig.purgeData || {};
-    this.jobs.push(
-      CronJob.from({
-        cronTime: cronConfigPurgeData.timeSpec,
-        onTick: async() => {
-          await this.cronTasksService.purgeData();
-        },
-        start: true,
-      }),
-    );
+    if (cronConfigPurgeData.timeSpec) {
+      this.jobs.push(
+        CronJob.from({
+          cronTime: cronConfigPurgeData.timeSpec,
+          onTick: async () => {
+            await this.cronTasksService.purgeData();
+          },
+          start: true,
+        }),
+      );
+    }
+
     // start dispatchLiveNotifications cron
     const cronConfigDispatchLiveNotifications =
       cronConfig.dispatchLiveNotifications || {};
-    this.jobs.push(
-      CronJob.from({
-        cronTime: cronConfigDispatchLiveNotifications.timeSpec,
-        onTick: async() => {
-          await this.cronTasksService.dispatchLiveNotifications();
-        },
-        start: true,
-      }),
-    );
+    if (cronConfigDispatchLiveNotifications.timeSpec) {
+      this.jobs.push(
+        CronJob.from({
+          cronTime: cronConfigDispatchLiveNotifications.timeSpec,
+          onTick: async () => {
+            await this.cronTasksService.dispatchLiveNotifications();
+          },
+          start: true,
+        }),
+      );
+    }
+
     // start checkRssConfigUpdates cron
     const cronConfigCheckRssConfigUpdates =
       cronConfig.checkRssConfigUpdates || {};
-    this.jobs.push(
-      CronJob.from({
-        cronTime: cronConfigCheckRssConfigUpdates.timeSpec,
-        onTick: async () => {
-          await this.cronTasksService.checkRssConfigUpdates();
-        },
-        start: true,
-      }),
-    );
+    if (cronConfigCheckRssConfigUpdates.timeSpec) {
+      this.jobs.push(
+        CronJob.from({
+          cronTime: cronConfigCheckRssConfigUpdates.timeSpec,
+          onTick: async () => {
+            await this.cronTasksService.checkRssConfigUpdates();
+          },
+          start: true,
+        }),
+      );
+    }
+
     // start deleteBounces cron
     const deleteBounces = cronConfig.deleteBounces || {};
-    this.jobs.push(
-      CronJob.from({
-        cronTime: deleteBounces.timeSpec,
-        onTick: async () => {
-          await this.cronTasksService.deleteBounces();
-        },
-        start: true,
-      }),
-    );
+    if (deleteBounces.timeSpec) {
+      this.jobs.push(
+        CronJob.from({
+          cronTime: deleteBounces.timeSpec,
+          onTick: async () => {
+            await this.cronTasksService.deleteBounces();
+          },
+          start: true,
+        }),
+      );
+    }
+
     const reDispatchBroadcastPushNotifications =
       cronConfig.reDispatchBroadcastPushNotifications || {};
-    this.jobs.push(
-      CronJob.from({
-        cronTime: reDispatchBroadcastPushNotifications.timeSpec,
-        onTick: async() => {
-          await this.cronTasksService.reDispatchBroadcastPushNotifications();
-        },
-        start: true,
-      }),
-    );
+    if (reDispatchBroadcastPushNotifications.timeSpec) {
+      this.jobs.push(
+        CronJob.from({
+          cronTime: reDispatchBroadcastPushNotifications.timeSpec,
+          onTick: async () => {
+            await this.cronTasksService.reDispatchBroadcastPushNotifications();
+          },
+          start: true,
+        }),
+      );
+    }
 
     if (
       (this.appConfig.sms?.throttle?.enabled &&
@@ -106,7 +120,7 @@ export class CronService implements OnApplicationBootstrap {
       this.jobs.push(
         CronJob.from({
           cronTime: clearRedisDatastore.timeSpec,
-          onTick: async() => {
+          onTick: async () => {
             await this.cronTasksService.clearRedisDatastore();
           },
           start: true,

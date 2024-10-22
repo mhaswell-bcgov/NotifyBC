@@ -17,12 +17,14 @@ import { fail } from 'assert';
 import fs from 'fs';
 import mongoose from 'mongoose';
 import path from 'path';
+import { CronService } from 'src//observers/cron.service';
 import { AccessTokenService } from 'src/api/administrators/access-token.service';
 import { BouncesService } from 'src/api/bounces/bounces.service';
 import { BaseController } from 'src/api/common/base.controller';
 import { ConfigurationsService } from 'src/api/configurations/configurations.service';
 import { NotificationsService } from 'src/api/notifications/notifications.service';
 import { SubscriptionsService } from 'src/api/subscriptions/subscriptions.service';
+import { AppConfigService } from 'src/config/app-config.service';
 import { CronTasksService } from 'src/observers/cron-tasks.service';
 import { RssService } from 'src/rss/rss.service';
 import supertest from 'supertest';
@@ -41,6 +43,8 @@ let configurationsService: ConfigurationsService;
 let bouncesService: BouncesService;
 let accessTokenService: AccessTokenService;
 let cronTasksService: CronTasksService;
+let appConfigService: AppConfigService;
+let cronService: CronService;
 beforeEach(() => {
   ({ app, client } = getAppAndClient());
   rssService = app.get<RssService>(RssService);
@@ -50,6 +54,8 @@ beforeEach(() => {
   bouncesService = app.get<BouncesService>(BouncesService);
   accessTokenService = app.get<AccessTokenService>(AccessTokenService);
   cronTasksService = app.get<CronTasksService>(CronTasksService);
+  cronService = app.get<CronService>(CronService);
+  appConfigService = app.get<AppConfigService>(AppConfigService);
 });
 
 describe('CRON purgeData', function () {
@@ -766,5 +772,211 @@ describe('CRON clearRedisDatastore', function () {
     );
     expect(ready).toBeCalledTimes(2);
     expect(disconnect).toBeCalledTimes(2);
+  });
+});
+
+describe('CronService Tests', () => {
+  // Shared mock config.
+  const mockConfig = {
+    cron: {
+      purgeData: { timeSpec: '* * * * *' },
+      dispatchLiveNotifications: { timeSpec: '* * * * *' },
+      checkRssConfigUpdates: { timeSpec: '* * * * *' },
+      deleteBounces: { timeSpec: '* * * * *' },
+      reDispatchBroadcastPushNotifications: { timeSpec: '* * * * *' },
+      clearRedisDatastore: { timeSpec: '* * * * *' },
+    },
+    sms: {
+      throttle: { enabled: true, clearDatastore: false, datastore: 'remote' },
+    },
+    email: {
+      throttle: { enabled: true, clearDatastore: false, datastore: 'remote' },
+    },
+  };
+
+  // Mocked AppConfigService with basic config retrieval functionality.
+  const mockAppConfigService = {
+    config: mockConfig,
+    get: jest.fn((propName) => {
+      if (!propName) {
+        return mockConfig;
+      }
+      return mockConfig[propName] || {};
+    }),
+  } as unknown as AppConfigService;
+
+  let cronService: CronService;
+  let cronTasksService: CronTasksService;
+
+  beforeEach(() => {
+    // Mock the CronTasksService with jest functions.
+    cronTasksService = {
+      purgeData: jest.fn(),
+      dispatchLiveNotifications: jest.fn(),
+      checkRssConfigUpdates: jest.fn(),
+      deleteBounces: jest.fn(),
+      reDispatchBroadcastPushNotifications: jest.fn(),
+      clearRedisDatastore: jest.fn(),
+    } as unknown as CronTasksService;
+
+    // Instantiate CronService with mocked AppConfigService and CronTasksService.
+    cronService = new CronService(mockAppConfigService, cronTasksService);
+
+    // Reset environment variables for normal operation.
+    process.env.NOTIFYBC_NODE_ROLE = '';
+    process.env.NODE_ENV = '';
+  });
+
+  afterEach(() => {
+    // Stop all jobs after each test.
+    cronService['jobs'].forEach((job) => {
+      job.stop();
+    });
+
+    // Remove environment variables after each test.
+    delete process.env.NOTIFYBC_NODE_ROLE;
+    delete process.env.NODE_ENV;
+  });
+
+  describe('normal operation', () => {
+    it('should start all cron jobs and call the correct methods', async () => {
+      await cronService.onApplicationBootstrap();
+      expect(cronService['jobs']).toHaveLength(6);
+
+      // Simulate cron job execution.
+      cronService['jobs'].forEach((job) => {
+        job.start();
+        const onTick = job._callbacks[0];
+        onTick();
+      });
+
+      expect(cronTasksService.purgeData).toHaveBeenCalled();
+      expect(cronTasksService.dispatchLiveNotifications).toHaveBeenCalled();
+      expect(cronTasksService.checkRssConfigUpdates).toHaveBeenCalled();
+      expect(cronTasksService.deleteBounces).toHaveBeenCalled();
+      expect(
+        cronTasksService.reDispatchBroadcastPushNotifications,
+      ).toHaveBeenCalled();
+      expect(cronTasksService.clearRedisDatastore).toHaveBeenCalled();
+    });
+  });
+
+  describe('on secondary node', () => {
+    beforeEach(() => {
+      // Set environment variable for secondary node.
+      process.env.NOTIFYBC_NODE_ROLE = 'slave';
+    });
+
+    it('should not start cron jobs if NOTIFYBC_NODE_ROLE is "slave"', async () => {
+      await cronService.onApplicationBootstrap();
+      expect(cronService['jobs']).toHaveLength(0);
+
+      // Ensure no methods are called.
+      expect(cronTasksService.purgeData).not.toHaveBeenCalled();
+      expect(cronTasksService.dispatchLiveNotifications).not.toHaveBeenCalled();
+      expect(cronTasksService.checkRssConfigUpdates).not.toHaveBeenCalled();
+      expect(cronTasksService.deleteBounces).not.toHaveBeenCalled();
+      expect(
+        cronTasksService.reDispatchBroadcastPushNotifications,
+      ).not.toHaveBeenCalled();
+      expect(cronTasksService.clearRedisDatastore).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('on test environment', () => {
+    beforeEach(() => {
+      process.env.NODE_ENV = 'test';
+    });
+
+    it('should not start cron jobs if NODE_ENV is "test"', async () => {
+      await cronService.onApplicationBootstrap();
+      expect(cronService['jobs']).toHaveLength(0);
+      expect(cronTasksService.purgeData).not.toHaveBeenCalled();
+      expect(cronTasksService.dispatchLiveNotifications).not.toHaveBeenCalled();
+      expect(cronTasksService.checkRssConfigUpdates).not.toHaveBeenCalled();
+      expect(cronTasksService.deleteBounces).not.toHaveBeenCalled();
+      expect(
+        cronTasksService.reDispatchBroadcastPushNotifications,
+      ).not.toHaveBeenCalled();
+      expect(cronTasksService.clearRedisDatastore).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('throttling configurations', () => {
+    it('should not enter if both SMS and Email throttling are disabled', async () => {
+      cronService['appConfig'].sms.throttle.enabled = false;
+      cronService['appConfig'].email.throttle.enabled = false;
+
+      await cronService.onApplicationBootstrap();
+      const onTick = cronService['jobs'][0]._callbacks[0];
+      onTick();
+
+      expect(cronTasksService.clearRedisDatastore).not.toHaveBeenCalled();
+    });
+
+    it('should not enter if SMS throttling is enabled but conditions do not meet', async () => {
+      cronService['appConfig'].sms.throttle.enabled = true;
+      cronService['appConfig'].sms.throttle.clearDatastore = true;
+      cronService['appConfig'].sms.throttle.datastore = 'local';
+
+      await cronService.onApplicationBootstrap();
+      const onTick = cronService['jobs'][0]._callbacks[0];
+      onTick();
+
+      expect(cronTasksService.clearRedisDatastore).not.toHaveBeenCalled();
+    });
+
+    it('should not enter if Email throttling is enabled but conditions do not meet', async () => {
+      cronService['appConfig'].sms.throttle.enabled = false;
+      cronService['appConfig'].email.throttle.enabled = true;
+      cronService['appConfig'].email.throttle.clearDatastore = true;
+      cronService['appConfig'].email.throttle.datastore = 'local';
+
+      await cronService.onApplicationBootstrap();
+      const onTick = cronService['jobs'][0]._callbacks[0];
+      onTick();
+
+      expect(cronTasksService.clearRedisDatastore).not.toHaveBeenCalled();
+    });
+
+    it('should enter if SMS throttling is enabled and datastore is not local', async () => {
+      cronService['appConfig'].sms.throttle.enabled = true;
+      cronService['appConfig'].sms.throttle.clearDatastore = false;
+      cronService['appConfig'].sms.throttle.datastore = 'remote';
+
+      await cronService.onApplicationBootstrap();
+      const onTick = cronService['jobs'][0]._callbacks[0];
+      onTick();
+
+      expect(cronTasksService.clearRedisDatastore).toHaveBeenCalled();
+    });
+
+    it('should enter if Email throttling is enabled and datastore is not local', async () => {
+      cronService['appConfig'].sms.throttle.enabled = false;
+      cronService['appConfig'].email.throttle.enabled = true;
+      cronService['appConfig'].email.throttle.clearDatastore = false;
+      cronService['appConfig'].email.throttle.datastore = 'remote';
+
+      await cronService.onApplicationBootstrap();
+      const onTick = cronService['jobs'][0]._callbacks[0];
+      onTick();
+
+      expect(cronTasksService.clearRedisDatastore).toHaveBeenCalled();
+    });
+
+    it('should enter if both SMS and Email throttling are enabled and neither is local', async () => {
+      cronService['appConfig'].sms.throttle.enabled = true;
+      cronService['appConfig'].sms.throttle.clearDatastore = false;
+      cronService['appConfig'].sms.throttle.datastore = 'remote';
+      cronService['appConfig'].email.throttle.enabled = true;
+      cronService['appConfig'].email.throttle.clearDatastore = false;
+      cronService['appConfig'].email.throttle.datastore = 'remote';
+
+      await cronService.onApplicationBootstrap();
+      const onTick = cronService['jobs'][0]._callbacks[0];
+      onTick();
+
+      expect(cronTasksService.clearRedisDatastore).toHaveBeenCalled();
+    });
   });
 });
