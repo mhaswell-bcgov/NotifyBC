@@ -56,8 +56,8 @@ entries:
     name: notify-bc
     type: application
     urls:
-    - https://bcgov.github.io/des-notifybc/helm/notify-bc-5.2.0-a.tgz
-    version: 5.2.0-a
+    - https://bcgov.github.io/des-notifybc/helm/notify-bc-5.2.0.tgz
+    version: 5.2.0
   - apiVersion: v2
     appVersion: "5.1"
     created: "2024-08-13T22:52:37.872836943Z"
