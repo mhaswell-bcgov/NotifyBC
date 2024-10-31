@@ -78,6 +78,25 @@ entries:
     - https://bcgov.github.io/des-notifybc/helm/notify-bc-5.2.0-pr53.tgz
     version: 5.2.0-pr53
   - apiVersion: v2
+    appVersion: "5.2"
+    created: "2024-10-31T22:55:25.179835997Z"
+    dependencies:
+    - name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 14.3.2
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.13.2
+    description: NotifyBC Helm chart for Kubernetes
+    digest: 930fe15d37cb664cdde81d0bb40b294f6b5ae4cf9770e2ea2f96fc784637379d
+    icon: https://raw.githubusercontent.com/bcgov/NotifyBC/main/favicon.ico
+    name: notify-bc
+    type: application
+    urls:
+    - https://bcgov.github.io/des-notifybc/helm/notify-bc-5.2.0-5.2.0-b.tgz
+    version: 5.2.0-5.2.0-b
+  - apiVersion: v2
     appVersion: "5.1"
     created: "2024-08-13T22:52:37.872836943Z"
     dependencies:
@@ -495,4 +514,4 @@ entries:
     urls:
     - https://bcgov.github.io/des-notifybc/helm/notify-bc-2.0.0.tgz
     version: 2.0.0
-generated: "2024-10-31T22:43:50.722010609Z"
+generated: "2024-10-31T22:55:25.169268611Z"
