@@ -12,22 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { HttpException, Injectable, Logger } from '@nestjs/common';
+import {HttpException, Injectable, Logger} from '@nestjs/common';
 import Bottleneck from 'bottleneck';
-import { CronJob } from 'cron';
+import {CronJob} from 'cron';
 import FeedParser from 'feedparser';
-import { differenceWith } from 'lodash';
-import { AnyObject } from 'mongoose';
-import { Readable } from 'node:stream';
-import { AccessTokenService } from 'src/api/administrators/access-token.service';
-import { BouncesService } from 'src/api/bounces/bounces.service';
-import { ConfigurationsService } from 'src/api/configurations/configurations.service';
-import { NotificationsService } from 'src/api/notifications/notifications.service';
-import { SubscriptionsService } from 'src/api/subscriptions/subscriptions.service';
-import { AppConfigService } from 'src/config/app-config.service';
-import { RssItem } from 'src/rss/entities/rss-item.entity';
-import { Rss } from 'src/rss/entities/rss.entity';
-import { RssService } from 'src/rss/rss.service';
+import {differenceWith} from 'lodash';
+import {AnyObject} from 'mongoose';
+import {Readable} from 'node:stream';
+import {AccessTokenService} from 'src/api/administrators/access-token.service';
+import {BouncesService} from 'src/api/bounces/bounces.service';
+import {ConfigurationsService} from 'src/api/configurations/configurations.service';
+import {NotificationsService} from 'src/api/notifications/notifications.service';
+import {SubscriptionsService} from 'src/api/subscriptions/subscriptions.service';
+import {AppConfigService} from 'src/config/app-config.service';
+import {RssItem} from 'src/rss/entities/rss-item.entity';
+import {Rss} from 'src/rss/entities/rss.entity';
+import {RssService} from 'src/rss/rss.service';
 
 @Injectable()
 export class CronTasksService {
@@ -41,7 +41,7 @@ export class CronTasksService {
     private readonly bouncesService: BouncesService,
     private readonly accessTokenService: AccessTokenService,
     private readonly rssService: RssService,
-  ) {}
+  ) { }
 
   purgeData() {
     const cronConfig = this.appConfigService.get('cron.purgeData') ?? {};
@@ -58,7 +58,7 @@ export class CronTasksService {
                 channel: {
                   $ne: 'inApp',
                 },
-                state: { $nin: ['new', 'sending'] },
+                state: {$nin: ['new', 'sending']},
                 created: {
                   $lt: Date.now() - retentionDays * 86400000,
                 },
@@ -66,11 +66,11 @@ export class CronTasksService {
               undefined,
             );
             if (data?.count > 0) {
-              this.logger.verbose(
+              this.logger.log(
                 new Date().toLocaleString() +
-                  ': Deleted ' +
-                  data.count +
-                  ' items.',
+                ': Deleted ' +
+                data.count +
+                ' items.',
               );
             }
             return data;
@@ -90,11 +90,11 @@ export class CronTasksService {
               undefined,
             );
             if (data?.count > 0) {
-              this.logger.verbose(
+              this.logger.log(
                 new Date().toLocaleString() +
-                  ': Deleted ' +
-                  data.count +
-                  ' items.',
+                ': Deleted ' +
+                data.count +
+                ' items.',
               );
             }
             return data;
@@ -109,11 +109,11 @@ export class CronTasksService {
               undefined,
             );
             if (data?.count > 0) {
-              this.logger.verbose(
+              this.logger.log(
                 new Date().toLocaleString() +
-                  ': Deleted ' +
-                  data.count +
-                  ' items.',
+                ': Deleted ' +
+                data.count +
+                ' items.',
               );
             }
             return data;
@@ -135,11 +135,11 @@ export class CronTasksService {
               undefined,
             );
             if (data?.count > 0) {
-              this.logger.verbose(
+              this.logger.log(
                 new Date().toLocaleString() +
-                  ': Deleted ' +
-                  data.count +
-                  ' items.',
+                ': Deleted ' +
+                data.count +
+                ' items.',
               );
             }
             return data;
@@ -156,11 +156,11 @@ export class CronTasksService {
               },
             });
             if (data?.count > 0) {
-              this.logger.verbose(
+              this.logger.log(
                 new Date().toLocaleString() +
-                  ': Deleted ' +
-                  data.count +
-                  ' items.',
+                ': Deleted ' +
+                data.count +
+                ' items.',
               );
             }
             return data;
@@ -172,7 +172,7 @@ export class CronTasksService {
               cronConfig.defaultRetentionDays;
             const data = await this.accessTokenService.findAll({
               where: {
-                ttl: { $gte: 0 },
+                ttl: {$gte: 0},
                 created: {
                   $lt: Date.now() - retentionDays * 86400000,
                 },
@@ -192,7 +192,7 @@ export class CronTasksService {
               }
             }
             if (count > 0) {
-              this.logger.verbose(
+              this.logger.log(
                 new Date().toLocaleString() + ': Deleted ' + count + ' items.',
               );
             }
@@ -250,7 +250,10 @@ export class CronTasksService {
             if (res.status >= 400)
               throw new HttpException(res.statusText, res.status);
           } catch (ex: any) {
+            const context = 'dispatchLiveNotifications';
             this.logger.error(ex);
+            this.logger.log(url, context);
+            this.logger.log(options, context);
           }
         }),
       );
@@ -300,7 +303,7 @@ export class CronTasksService {
                 serviceName: rssNtfctnConfigItem.serviceName,
               },
             });
-          } catch (ex) {}
+          } catch (ex) { }
           if (!lastSavedRssData) {
             lastSavedRssData = await this.rssService.create({
               serviceName: rssNtfctnConfigItem.serviceName as string,
@@ -310,7 +313,7 @@ export class CronTasksService {
           let lastSavedRssItems: any[] = [];
           try {
             lastSavedRssItems = lastSavedRssData.items ?? [];
-          } catch (ex) {}
+          } catch (ex) { }
           const feedparser = new FeedParser({
             addmeta: false,
           });
@@ -352,7 +355,7 @@ export class CronTasksService {
                       arrVal[compareField] &&
                       othVal[compareField] &&
                       arrVal[compareField].toString() !==
-                        othVal[compareField].toString()
+                      othVal[compareField].toString()
                     );
                   },
                 );
@@ -365,16 +368,16 @@ export class CronTasksService {
             try {
               lastPollInterval =
                 ts.getTime() - lastSavedRssData?.lastPoll.valueOf();
-            } catch (ex) {}
+            } catch (ex) { }
             const retainedOutdatedItems = differenceWith(
               lastSavedRssItems,
               items,
               function (
                 arrVal: {
                   [x: string]: any;
-                  _notifyBCLastPoll: { getTime: () => number };
+                  _notifyBCLastPoll: {getTime: () => number};
                 },
-                othVal: { [x: string]: any },
+                othVal: {[x: string]: any},
               ) {
                 try {
                   const age = ts.getTime() - arrVal._notifyBCLastPoll.getTime();
@@ -384,7 +387,7 @@ export class CronTasksService {
                   ) {
                     return true;
                   }
-                } catch (ex) {}
+                } catch (ex) { }
                 return arrVal[itemKeyField] === othVal[itemKeyField];
               },
             );
@@ -538,7 +541,10 @@ export class CronTasksService {
               if (res.status >= 400)
                 throw new HttpException(res.statusText, res.status);
             } catch (ex: any) {
+              const context = 'reDispatchLiveNotifications';
               this.logger.error(ex);
+              this.logger.log(url, context);
+              this.logger.log(options, context);
             }
           },
         ),
@@ -570,7 +576,7 @@ export class CronTasksService {
         );
         if (sendingNotification) continue;
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { enabled, jobExpiration, ...newThrottleConfig } = {
+        const {enabled, jobExpiration, ...newThrottleConfig} = {
           ...throttleConfig,
           enabled: undefined,
           jobExpiration: undefined,

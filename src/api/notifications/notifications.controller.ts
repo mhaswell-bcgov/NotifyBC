@@ -30,7 +30,7 @@ import {
   Query,
   Scope,
 } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
+import {REQUEST} from '@nestjs/core';
 import {
   ApiBadRequestResponse,
   ApiExcludeEndpoint,
@@ -40,33 +40,33 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { queue } from 'async';
+import {queue} from 'async';
 import axios from 'axios';
-import { Request } from 'express';
+import {Request} from 'express';
 import jmespath from 'jmespath';
-import { pullAll } from 'lodash';
-import { AnyObject, FilterQuery } from 'mongoose';
-import { Role } from 'src/auth/constants';
-import { UserProfile } from 'src/auth/dto/user-profile.dto';
-import { Roles } from 'src/auth/roles.decorator';
-import { AppConfigService } from 'src/config/app-config.service';
-import { promisify } from 'util';
-import { BouncesService } from '../bounces/bounces.service';
-import { BaseController } from '../common/base.controller';
-import { CountDto } from '../common/dto/count.dto';
-import { FilterDto } from '../common/dto/filter.dto';
+import {pullAll} from 'lodash';
+import {AnyObject, FilterQuery} from 'mongoose';
+import {Role} from 'src/auth/constants';
+import {UserProfile} from 'src/auth/dto/user-profile.dto';
+import {Roles} from 'src/auth/roles.decorator';
+import {AppConfigService} from 'src/config/app-config.service';
+import {promisify} from 'util';
+import {BouncesService} from '../bounces/bounces.service';
+import {BaseController} from '../common/base.controller';
+import {CountDto} from '../common/dto/count.dto';
+import {FilterDto} from '../common/dto/filter.dto';
 import {
   ApiFilterJsonQuery,
   ApiWhereJsonQuery,
   JsonQuery,
 } from '../common/json-query.decorator';
-import { ConfigurationsService } from '../configurations/configurations.service';
-import { Subscription } from '../subscriptions/entities/subscription.entity';
-import { SubscriptionsService } from '../subscriptions/subscriptions.service';
-import { CreateNotificationDto } from './dto/create-notification.dto';
-import { UpdateNotificationDto } from './dto/update-notification.dto';
-import { Notification } from './entities/notification.entity';
-import { NotificationsService } from './notifications.service';
+import {ConfigurationsService} from '../configurations/configurations.service';
+import {Subscription} from '../subscriptions/entities/subscription.entity';
+import {SubscriptionsService} from '../subscriptions/subscriptions.service';
+import {CreateNotificationDto} from './dto/create-notification.dto';
+import {UpdateNotificationDto} from './dto/update-notification.dto';
+import {Notification} from './entities/notification.entity';
+import {NotificationsService} from './notifications.service';
 const wait = promisify(setTimeout);
 enum NotificationDispatchStatusField {
   failed,
@@ -87,7 +87,7 @@ export class NotificationsController extends BaseController {
     readonly appConfigService: AppConfigService,
     readonly configurationsService: ConfigurationsService,
     private readonly bouncesService: BouncesService,
-    @Inject(REQUEST) private readonly req: Request & { user: UserProfile },
+    @Inject(REQUEST) private readonly req: Request & {user: UserProfile},
   ) {
     super(appConfigService, configurationsService);
     const ft = this.appConfig.notification?.broadcastCustomFilterFunctions;
@@ -124,7 +124,7 @@ export class NotificationsController extends BaseController {
     await this.preCreationValidation(notification);
     await this.notificationsService.replaceById(id, notification, this.req);
     notification = await this.notificationsService.findById(id);
-    this.req['args'] = { data: notification };
+    this.req['args'] = {data: notification};
     await this.dispatchNotification(notification as Notification);
   }
 
@@ -132,8 +132,8 @@ export class NotificationsController extends BaseController {
   @ApiNoContentResponse({
     description: 'Notification PATCH success',
   })
-  @ApiForbiddenResponse({ description: 'Forbidden' })
-  @ApiBadRequestResponse({ description: 'Bad Request' })
+  @ApiForbiddenResponse({description: 'Forbidden'})
+  @ApiBadRequestResponse({description: 'Bad Request'})
   @HttpCode(204)
   async updateById(
     @Param('id') id: string,
@@ -149,7 +149,7 @@ export class NotificationsController extends BaseController {
       }
       const instance = await this.notificationsService.findOne(
         {
-          where: { id },
+          where: {id},
         },
         this.req,
       );
@@ -210,20 +210,20 @@ export class NotificationsController extends BaseController {
     return this.notificationsService.findOne(
       {
         ...filter,
-        where: { id },
+        where: {id},
       },
       this.req,
     );
   }
 
   @Delete(':id')
-  @ApiNoContentResponse({ description: 'Notification DELETE success' })
-  @ApiForbiddenResponse({ description: 'Forbidden' })
+  @ApiNoContentResponse({description: 'Notification DELETE success'})
+  @ApiForbiddenResponse({description: 'Forbidden'})
   @HttpCode(204)
   async deleteById(@Param('id') id: string): Promise<void> {
     const data = await this.notificationsService.findOne(
       {
-        where: { id },
+        where: {id},
       },
       this.req,
     );
@@ -244,8 +244,10 @@ export class NotificationsController extends BaseController {
   ): Promise<Notification> {
     await this.preCreationValidation(notification);
     const res = await this.notificationsService.create(notification, this.req);
-    this.req['args'] = { data: res };
-    return this.dispatchNotification(res);
+
+    Logger.log(res);
+    this.req['args'] = {data: res};
+    return await this.dispatchNotification(res);
   }
 
   @Get()
@@ -307,12 +309,12 @@ export class NotificationsController extends BaseController {
     }
     const notification = await this.notificationsService.findOne(
       {
-        where: { id },
+        where: {id},
       },
       this.req,
     );
     if (!notification) throw new HttpException(undefined, HttpStatus.NOT_FOUND);
-    this.req['args'] = { data: notification };
+    this.req['args'] = {data: notification};
     this.req['NotifyBC.startIdx'] = startIdx;
     return this.sendPushNotification(notification);
   }
@@ -361,9 +363,10 @@ export class NotificationsController extends BaseController {
     payload: any,
   ) {
     let success = false;
+    Logger.log(JSON.stringify(data), 'updateBroadcastPushNotificationStatus');
     while (!success) {
       try {
-        const val = payload instanceof Array ? { $each: payload } : payload;
+        const val = payload instanceof Array ? {$each: payload} : payload;
         await this.notificationsService.updateById(
           data.id,
           {
@@ -375,7 +378,9 @@ export class NotificationsController extends BaseController {
         );
         success = true;
         return;
-      } catch (ex) {}
+      } catch (ex) {
+        Logger.log(JSON.stringify(ex), 'updateBroadcastPushNotificationStatus catch');
+      }
       await wait(1000);
     }
   }
@@ -383,7 +388,9 @@ export class NotificationsController extends BaseController {
   guaranteedBroadcastPushDispatchProcessing =
     this.appConfig.notification?.guaranteedBroadcastPushDispatchProcessing;
   async notificationMsgCB(data, err: any, e: Subscription) {
+    Logger.log('Guaranteed broadcast push dispatch processing? ' + this.guaranteedBroadcastPushDispatchProcessing);
     if (err) {
+      Logger.log('err', 'notificationMsgCB');
       return this.updateBroadcastPushNotificationStatus(
         data,
         NotificationDispatchStatusField.failed,
@@ -397,16 +404,20 @@ export class NotificationsController extends BaseController {
       this.guaranteedBroadcastPushDispatchProcessing ||
       this.handleBounce
     ) {
+      Logger.log('not err', 'notificationMsgCB');
       return this.updateBroadcastPushNotificationStatus(
         data,
         NotificationDispatchStatusField.successful,
         e.id.toString(),
       );
     }
+    Logger.log('Missed both returns');
   }
 
   async postBroadcastProcessing(data) {
     data = await this.notificationsService.findById(data.id);
+    Logger.log('postBroadcastProcessing');
+    Logger.log(data);
     const res = await this.subscriptionsService.findAll(
       {
         fields: {
@@ -422,7 +433,7 @@ export class NotificationsController extends BaseController {
     );
     const userChannelIds = res.map((e) => e.userChannelId);
     const errUserChannelIds = (data.dispatch?.failed || []).map(
-      (e: { userChannelId: any }) => e.userChannelId,
+      (e: {userChannelId: any}) => e.userChannelId,
     );
     pullAll(userChannelIds, errUserChannelIds);
     await this.updateBounces(userChannelIds, data);
@@ -435,7 +446,7 @@ export class NotificationsController extends BaseController {
       }
       await this.notificationsService.updateById(
         data.id,
-        { state: data.state },
+        {state: data.state},
         this.req,
       );
       if (typeof data.asyncBroadcastPushNotification === 'string') {
@@ -448,7 +459,7 @@ export class NotificationsController extends BaseController {
         };
         try {
           await fetch(data.asyncBroadcastPushNotification, options);
-        } catch (ex) {}
+        } catch (ex) { }
       }
     }
   }
@@ -466,6 +477,7 @@ export class NotificationsController extends BaseController {
       startIdx,
       startIdx + this.broadcastSubscriberChunkSize,
     );
+    Logger.log(subChunk);
     pullAll(
       pullAll(
         pullAll(
@@ -479,7 +491,7 @@ export class NotificationsController extends BaseController {
     const subscribers = await this.subscriptionsService.findAll(
       {
         where: {
-          id: { $in: subChunk },
+          id: {$in: subChunk},
         },
       },
       this.req,
@@ -494,7 +506,7 @@ export class NotificationsController extends BaseController {
               '[?' + e.broadcastPushNotificationFilter + ']',
               this.jmespathSearchOpts,
             );
-          } catch (ex) {}
+          } catch (ex) { }
           if (!match || match.length === 0) {
             if (
               this.guaranteedBroadcastPushDispatchProcessing &&
@@ -516,7 +528,7 @@ export class NotificationsController extends BaseController {
               '[?' + data.broadcastPushNotificationSubscriptionFilter + ']',
               this.jmespathSearchOpts,
             );
-          } catch (ex) {}
+          } catch (ex) { }
           if (!match || match.length === 0) {
             if (
               this.guaranteedBroadcastPushDispatchProcessing &&
@@ -603,9 +615,12 @@ export class NotificationsController extends BaseController {
                   undefined,
                   HttpStatus.INTERNAL_SERVER_ERROR,
                 );
-              await this.sendEmail(mailOptions);
-              return await this.notificationMsgCB(data, null, e);
+              Logger.log('Sending email');
+              const res = await this.sendEmail(mailOptions);
+              const notificationResponse = await this.notificationMsgCB(data, null, e);
+              return notificationResponse;
             } catch (ex) {
+              Logger.log(ex);
               return await this.notificationMsgCB(data, ex, e);
             }
           }
@@ -686,6 +701,7 @@ export class NotificationsController extends BaseController {
         const broadcastSubRequestBatchSize =
           this.appConfig.notification?.broadcastSubRequestBatchSize;
         let startIdx: undefined | number = this.req['NotifyBC.startIdx'];
+        Logger.log('Sending notification ' + startIdx);
         if (typeof startIdx !== 'number') {
           // main request
           const subCandidates = await this.subscriptionsService.findAll(
@@ -721,6 +737,7 @@ export class NotificationsController extends BaseController {
             );
           }, 60000);
 
+          Logger.log('Found subscription candidates: ' + subCandidates.length);
           const count = subCandidates.length;
 
           if (count <= this.broadcastSubscriberChunkSize) {
@@ -738,7 +755,7 @@ export class NotificationsController extends BaseController {
                 this.req.protocol + '://' + this.req.get('host');
             }
 
-            const q = queue(async (task: { startIdx: string }) => {
+            const q = queue(async (task: {startIdx: string}) => {
               const uri =
                 httpHost +
                 restApiRoot +
@@ -746,7 +763,9 @@ export class NotificationsController extends BaseController {
                 data.id +
                 '/broadcastToChunkSubscribers?start=' +
                 task.startIdx;
+              Logger.log('Making request to: ' + uri);
               const response = await axios.get(uri);
+              Logger.log(response);
               return response.data;
             }, broadcastSubRequestBatchSize);
             // re-submit task on error if
@@ -770,7 +789,7 @@ export class NotificationsController extends BaseController {
                 );
                 failedChunks = failedChunks.concat(
                   subChunk.map((e) => {
-                    return { subscriptionId: e };
+                    return {subscriptionId: e};
                   }),
                 );
               }
@@ -827,7 +846,7 @@ export class NotificationsController extends BaseController {
         }
         await this.notificationsService.updateById(
           res.id,
-          { state: res.state },
+          {state: res.state},
           this.req,
         );
         break;
@@ -843,6 +862,7 @@ export class NotificationsController extends BaseController {
       data.skipSubscriptionConfirmationCheck &&
       !data.userChannelId
     ) {
+      Logger.error('Incorrect Notification data: ' + JSON.stringify(data));
       throw new HttpException('invalid user', HttpStatus.FORBIDDEN);
     }
     let filter = data.broadcastPushNotificationSubscriptionFilter;
@@ -851,6 +871,7 @@ export class NotificationsController extends BaseController {
       try {
         jmespath.compile(filter);
       } catch (ex) {
+        Logger.error('Invalid broadcastPushNotificationFilter');
         throw new HttpException(
           'invalid broadcastPushNotificationFilter',
           HttpStatus.BAD_REQUEST,
@@ -865,6 +886,7 @@ export class NotificationsController extends BaseController {
       return;
     }
     if (!data.userChannelId && !data.userId) {
+      Logger.error('Missing userChannelId or userId');
       throw new HttpException('invalid user', HttpStatus.FORBIDDEN);
     }
     // validate userChannelId/userId of a unicast push notification against subscription data
@@ -896,6 +918,7 @@ export class NotificationsController extends BaseController {
         this.req,
       );
       if (!subscription) {
+        Logger.log('Could not find subscription');
         throw new HttpException('invalid user', HttpStatus.FORBIDDEN);
       }
       // in case request supplies userId instead of userChannelId
