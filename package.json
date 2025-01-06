@@ -87,7 +87,7 @@
     "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.59.11",
     "@typescript-eslint/parser": "^5.59.11",
-    "commander": "^11.1.0",
+    "commander": "^13.0.0",
     "csvtojson": "^2.0.10",
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^8.8.0",
